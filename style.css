@@ -1,9 +1,11 @@
+/* --- FONTS --- */
 .vt323-regular {
     font-family: "VT323", monospace;
     font-weight: 400;
     font-style: normal;
 }
 
+/* --- BACKGROUND & ANIMATIONS --- */
 @property --gradient-angle {
     syntax: "<angle>";
     initial-value: 0deg;
@@ -67,6 +69,7 @@ body {
     transition: none !important;
 }
 
+/* --- METADATA --- */
 #metadata-container {
     position: absolute;
     top: calc(50% - 13rem);
@@ -99,6 +102,7 @@ body {
     text-transform: uppercase;
 }
 
+/* --- CONTROLS --- */
 #player-controls {
     display: flex;
     flex-direction: column;
@@ -107,6 +111,7 @@ body {
     z-index: 10;
 }
 
+/* --- ONIGIRI --- */
 #onigiri-link {
     display: flex;
     justify-content: center;
@@ -130,7 +135,6 @@ body {
 #onigiri-link:hover {
     transform: scale(1.05);
 }
-
 #onigiri-link:active {
     transform: scale(0.95);
 }
@@ -141,23 +145,25 @@ body {
         drop-shadow(0 0 120px rgba(255, 255, 255, 0.3)) !important;
 }
 
+/* --- NEXT --- */
 .nav-btn {
     width: 3.5rem;
     height: 3.5rem;
     cursor: pointer;
     opacity: 0;
-    transition: opacity 0.5s ease;
     pointer-events: none;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: opacity 0.5s ease;
+    transition:
+        opacity 0.5s ease,
+        transform 0.2s ease;
 }
 
-.nav-btn img {
+.nav-btn svg {
     width: 100%;
-    height: auto;
-    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+    height: 100%;
+    display: block;
 }
 
 .show-nav .nav-btn {
