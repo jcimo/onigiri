@@ -43,10 +43,14 @@ let player;
 let isPlaying = false;
 let apiReady = false;
 let firstPlay = true;
+let currentVolume = 80;
+
 const PLAYLIST_ID = "PLsTX-6Y0uWvMKvaDYnd1f_PZR7hq0vjPP";
 const onigiri = document.getElementById("onigiri-link");
 const controls = document.getElementById("player-controls");
 const nextBtn = document.getElementById("next-btn");
+const volUpBtn = document.getElementById("vol-up-btn");
+const volDownBtn = document.getElementById("vol-down-btn");
 
 function updateSongTitle() {
     const titleElement = document.getElementById("song-title");
@@ -63,6 +67,11 @@ function updateSongTitle() {
     }
 }
 
+function updateVolumeUI() {
+    volUpBtn.classList.toggle("limit-reached", currentVolume >= 100);
+    volDownBtn.classList.toggle("limit-reached", currentVolume <= 1);
+}
+
 window.onYouTubeIframeAPIReady = function () {
     console.log("onigiri: handshake started");
     player = new YT.Player("youtube-player", {
@@ -77,18 +86,21 @@ window.onYouTubeIframeAPIReady = function () {
             origin: window.location.origin,
         },
         events: {
-            onReady: (event) => {
+            onReady: () => {
                 console.log("onigiri: ready");
                 apiReady = true;
                 player.setShuffle(true);
                 player.setLoop(true);
+                player.setVolume(currentVolume);
+                updateVolumeUI();
             },
             onStateChange: (event) => {
                 if (event.data === YT.PlayerState.PLAYING) {
-                    player.setShuffle(true);
+                    // player.setShuffle(true);
                     updateSongTitle();
                 }
                 if (event.data === YT.PlayerState.ENDED) {
+                    console.log("onigiri: ended");
                     player.nextVideo();
                 }
             },
@@ -112,7 +124,6 @@ onigiri.addEventListener("click", () => {
         controls.classList.add("show-nav");
         document.body.style.animationPlayState = "running";
         player.unMute();
-        player.setVolume(100);
         if (firstPlay) {
             console.log("onigiri: start");
             const playlist = player.getPlaylist();
@@ -142,9 +153,23 @@ nextBtn.addEventListener("click", () => {
         onigiri.classList.remove("shake");
         void onigiri.offsetWidth;
         onigiri.classList.add("shake");
-        setTimeout(() => {
-            onigiri.classList.remove("shake");
-        }, 400);
+        setTimeout(() => onigiri.classList.remove("shake"), 400);
         player.nextVideo();
+    }
+});
+
+volUpBtn.addEventListener("click", () => {
+    if (apiReady && isPlaying && currentVolume < 100) {
+        currentVolume = Math.min(currentVolume + 10, 100);
+        player.setVolume(currentVolume);
+        updateVolumeUI();
+    }
+});
+
+volDownBtn.addEventListener("click", () => {
+    if (apiReady && isPlaying && currentVolume > 1) {
+        currentVolume = Math.max(currentVolume - 10, 1);
+        player.setVolume(currentVolume);
+        updateVolumeUI();
     }
 });

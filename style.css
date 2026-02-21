@@ -66,13 +66,12 @@ body {
 
 .shake {
     animation: shakeOnigiri 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-    transition: none !important;
 }
 
 /* --- METADATA --- */
 #metadata-container {
     position: absolute;
-    top: calc(50% - 13rem);
+    top: calc(50% - 15rem);
     width: 100%;
     text-align: center;
     opacity: 0;
@@ -107,8 +106,17 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.69rem;
+    gap: 1rem;
     z-index: 10;
+}
+
+.main-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    width: auto;
 }
 
 /* --- ONIGIRI --- */
@@ -116,36 +124,35 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    text-decoration: none;
     cursor: pointer;
     user-select: none;
-    transition:
-        transform 0.2s ease,
-        opacity 0.2s ease;
-    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+    transition: transform 0.2s ease;
+    filter: none;
+    will-change: filter, transform;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 #onigiri-img {
     width: 12rem;
     height: auto;
     pointer-events: none;
-    -webkit-user-drag: none;
 }
 
 #onigiri-link:hover {
-    transform: scale(1.05);
+    transform: scale(1.05) translateZ(0);
 }
+
 #onigiri-link:active {
-    transform: scale(0.95);
+    transform: scale(0.95) translateZ(0);
 }
 
 .glow-active {
     filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1))
-        drop-shadow(0 0 60px rgba(255, 255, 255, 0.6))
-        drop-shadow(0 0 120px rgba(255, 255, 255, 0.3)) !important;
+        drop-shadow(0 0 60px rgba(255, 255, 255, 0.6)) !important;
 }
 
-/* --- NEXT --- */
+/* --- BUTTONS --- */
 .nav-btn {
     width: 3.5rem;
     height: 3.5rem;
@@ -156,26 +163,31 @@ body {
     justify-content: center;
     align-items: center;
     transition:
-        opacity 0.5s ease,
+        opacity 0.3s ease,
         transform 0.2s ease;
 }
 
-.nav-btn svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
 .show-nav .nav-btn {
-    opacity: 0.7;
+    opacity: 0.2;
     pointer-events: auto;
-    transition-delay: 0.4s;
 }
 
-.nav-btn:hover {
+.show-nav .nav-btn:hover {
     opacity: 1 !important;
 }
 
 .nav-btn:active {
     transform: scale(0.9);
+}
+
+.show-nav .nav-btn.limit-reached,
+.show-nav .nav-btn.limit-reached:hover {
+    opacity: 0.1 !important;
+    cursor: default;
+    transform: none;
+}
+
+.nav-btn svg {
+    width: 100%;
+    height: 100%;
 }
