@@ -25,7 +25,7 @@ function updateBackground(x, y) {
     const percent = Math.min(currentDistance / maxDistance, 1);
     const currentTop = interpolate(lime, orange, percent);
     const currentBottom = interpolate(blue, purple, percent);
-    document.body.style.background = `linear-gradient(to bottom, ${currentTop}, ${currentBottom})`;
+    document.body.style.backgroundImage = `linear-gradient(var(--gradient-angle, 0deg), ${currentTop}, ${currentBottom})`;
 }
 
 updateBackground(0, 0);
@@ -80,9 +80,13 @@ window.onYouTubeIframeAPIReady = function () {
 onigiri.addEventListener("click", () => {
     console.log("onigiri: click");
     if (!apiReady) return;
+    if (!document.body.classList.contains("rotating-background")) {
+        document.body.classList.add("rotating-background");
+    }
     if (!isPlaying) {
         isPlaying = true;
         onigiri.classList.add("glow-active");
+        document.body.style.animationPlayState = "running";
         player.unMute();
         player.setVolume(100);
         if (firstPlay) {
@@ -94,12 +98,13 @@ onigiri.addEventListener("click", () => {
             firstPlay = false;
             console.log("onigiri: start");
         } else {
-            player.nextVideo();
-            console.log("onigiri: next");
+            player.playVideo();
+            console.log("onigiri: resume");
         }
     } else {
         isPlaying = false;
         onigiri.classList.remove("glow-active");
+        document.body.style.animationPlayState = "paused";
         player.pauseVideo();
         console.log("onigiri: pause");
     }

@@ -1,3 +1,9 @@
+@property --gradient-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -6,9 +12,28 @@ body {
     overflow: hidden;
     transition: background 0.1s ease-out;
     background-color: black;
+    background-image: linear-gradient(
+        var(--gradient-angle, 0deg),
+        black,
+        black
+    );
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.rotating-background {
+    animation: rotateGradient 10s linear infinite;
+    animation-play-state: paused;
+}
+
+@keyframes rotateGradient {
+    from {
+        --gradient-angle: 0deg;
+    }
+    to {
+        --gradient-angle: 360deg;
+    }
 }
 
 #onigiri-link {
