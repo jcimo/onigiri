@@ -45,6 +45,18 @@ let apiReady = false;
 let firstPlay = true;
 const onigiri = document.getElementById("onigiri-link");
 
+function updateSongTitle() {
+    const titleElement = document.getElementById("song-title");
+    const artistElement = document.getElementById("song-artist");
+    const container = document.getElementById("metadata-container");
+    const videoData = player.getVideoData();
+    if (videoData && videoData.title) {
+        titleElement.innerText = videoData.title;
+        artistElement.innerText = videoData.author.replace(/ - Topic$/i, "");
+        container.classList.add("show-title");
+    }
+}
+
 window.onYouTubeIframeAPIReady = function () {
     console.log("onigiri: handshake started");
     player = new YT.Player("youtube-player", {
@@ -67,6 +79,7 @@ window.onYouTubeIframeAPIReady = function () {
             onStateChange: (event) => {
                 if (event.data === YT.PlayerState.PLAYING) {
                     player.setShuffle(true);
+                    updateSongTitle();
                 }
             },
             onError: (e) => {
@@ -98,14 +111,17 @@ onigiri.addEventListener("click", () => {
             firstPlay = false;
             console.log("onigiri: start");
         } else {
-            player.playVideo();
-            console.log("onigiri: resume");
+            player.nextVideo();
+            console.log("onigiri: next");
         }
     } else {
         isPlaying = false;
         onigiri.classList.remove("glow-active");
         document.body.style.animationPlayState = "paused";
         player.pauseVideo();
+        document
+            .getElementById("metadata-container")
+            .classList.remove("show-title");
         console.log("onigiri: pause");
     }
 });
