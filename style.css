@@ -1,0 +1,47 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    transition: background 0.1s ease-out;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#onigiri-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+}
+
+#onigiri-img {
+    width: 12rem;
+    height: auto;
+    pointer-events: none;
+    -webkit-user-drag: none;
+}
+
+#onigiri-link:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+#onigiri-link:active {
+    transform: scale(0.95);
+}
+
+.glow-active {
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1))
+        drop-shadow(0 0 60px rgba(255, 255, 255, 0.6))
+        drop-shadow(0 0 120px rgba(255, 255, 255, 0.3)) !important;
+}
