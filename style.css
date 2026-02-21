@@ -17,9 +17,12 @@ body {
         black,
         black
     );
+    background-attachment: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
+    -webkit-transform: translateZ(0);
+    will-change: --gradient-angle;
 }
 
 .rotating-background {
