@@ -43,7 +43,10 @@ let player;
 let isPlaying = false;
 let apiReady = false;
 let firstPlay = true;
+const PLAYLIST_ID = "PLsTX-6Y0uWvMKvaDYnd1f_PZR7hq0vjPP";
 const onigiri = document.getElementById("onigiri-link");
+const controls = document.getElementById("player-controls");
+const nextBtn = document.getElementById("next-btn");
 
 function updateSongTitle() {
     const titleElement = document.getElementById("song-title");
@@ -51,7 +54,10 @@ function updateSongTitle() {
     const container = document.getElementById("metadata-container");
     const videoData = player.getVideoData();
     if (videoData && videoData.title) {
-        titleElement.innerText = videoData.title;
+        let cleanTitle = videoData.title
+            .replace(/\s*\(.*\)$/, "")
+            .replace(/\s*\[.*\]$/, "");
+        titleElement.innerText = cleanTitle;
         artistElement.innerText = videoData.author.replace(/ - Topic$/i, "");
         container.classList.add("show-title");
     }
@@ -64,7 +70,7 @@ window.onYouTubeIframeAPIReady = function () {
         width: "1",
         playerVars: {
             listType: "playlist",
-            list: "PLsTX-6Y0uWvMKvaDYnd1f_PZR7hq0vjPP",
+            list: PLAYLIST_ID,
             autoplay: 0,
             controls: 0,
             enablejsapi: 1,
@@ -72,14 +78,18 @@ window.onYouTubeIframeAPIReady = function () {
         },
         events: {
             onReady: (event) => {
+                console.log("onigiri: ready");
                 apiReady = true;
                 player.setShuffle(true);
-                console.log("onigiri: ready");
+                player.setLoop(true);
             },
             onStateChange: (event) => {
                 if (event.data === YT.PlayerState.PLAYING) {
                     player.setShuffle(true);
                     updateSongTitle();
+                }
+                if (event.data === YT.PlayerState.ENDED) {
+                    player.nextVideo();
                 }
             },
             onError: (e) => {
@@ -99,29 +109,42 @@ onigiri.addEventListener("click", () => {
     if (!isPlaying) {
         isPlaying = true;
         onigiri.classList.add("glow-active");
+        controls.classList.add("show-nav");
         document.body.style.animationPlayState = "running";
         player.unMute();
         player.setVolume(100);
         if (firstPlay) {
+            console.log("onigiri: start");
             const playlist = player.getPlaylist();
-            const randomIndex = Math.floor(
-                Math.random() * (playlist ? playlist.length : 1),
-            );
+            const max = playlist && playlist.length ? playlist.length : 1;
+            const randomIndex = Math.floor(Math.random() * max);
             player.playVideoAt(randomIndex);
             firstPlay = false;
-            console.log("onigiri: start");
         } else {
-            player.nextVideo();
-            console.log("onigiri: next");
+            console.log("onigiri: play");
+            player.playVideo();
         }
     } else {
+        console.log("onigiri: pause");
         isPlaying = false;
         onigiri.classList.remove("glow-active");
+        controls.classList.remove("show-nav");
         document.body.style.animationPlayState = "paused";
         player.pauseVideo();
         document
             .getElementById("metadata-container")
             .classList.remove("show-title");
-        console.log("onigiri: pause");
+    }
+});
+
+nextBtn.addEventListener("click", () => {
+    if (apiReady && isPlaying) {
+        onigiri.classList.remove("shake");
+        void onigiri.offsetWidth;
+        onigiri.classList.add("shake");
+        setTimeout(() => {
+            onigiri.classList.remove("shake");
+        }, 400);
+        player.nextVideo();
     }
 });
