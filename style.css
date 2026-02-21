@@ -75,7 +75,7 @@ body {
     width: 100%;
     text-align: center;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.3s ease;
     pointer-events: none;
     font-family: "VT323", monospace;
     color: white;

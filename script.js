@@ -57,13 +57,16 @@ function updateSongTitle() {
     const artistElement = document.getElementById("song-artist");
     const container = document.getElementById("metadata-container");
     const videoData = player.getVideoData();
+    if (firstPlay) return;
     if (videoData && videoData.title) {
         let cleanTitle = videoData.title
             .replace(/\s*\(.*\)$/, "")
             .replace(/\s*\[.*\]$/, "");
         titleElement.innerText = cleanTitle;
         artistElement.innerText = videoData.author.replace(/ - Topic$/i, "");
-        container.classList.add("show-title");
+        if (isPlaying) {
+            container.classList.add("show-title");
+        }
     }
 }
 
@@ -122,6 +125,7 @@ onigiri.addEventListener("click", () => {
         isPlaying = true;
         onigiri.classList.add("glow-active");
         controls.classList.add("show-nav");
+        updateSongTitle();
         document.body.style.animationPlayState = "running";
         player.unMute();
         if (firstPlay) {
@@ -140,11 +144,11 @@ onigiri.addEventListener("click", () => {
         isPlaying = false;
         onigiri.classList.remove("glow-active");
         controls.classList.remove("show-nav");
-        document.body.style.animationPlayState = "paused";
-        player.pauseVideo();
         document
             .getElementById("metadata-container")
             .classList.remove("show-title");
+        document.body.style.animationPlayState = "paused";
+        player.pauseVideo();
     }
 });
 
